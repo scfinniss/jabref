@@ -772,3 +772,11 @@ task bundleLibreOffice(type: Jar) {
     destinationDir = file('lib')
     archiveName = 'libreoffice.jar'
 }
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.jabref.gui.JabRefMain'
+        )
+    }
+}
