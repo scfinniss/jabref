@@ -11,6 +11,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import org.jabref.gui.Globals;
+import org.jabref.logic.shared.DBMSSynchronizer;
+import org.jabref.logic.shared.DatabaseLocation;
 import org.jabref.model.database.BibDatabase;
 import org.jabref.model.database.BibDatabaseContext;
 import org.jabref.model.database.BibDatabases;
@@ -145,15 +148,18 @@ public class ParserResult {
         return String.join(" ", warnings());
     }
 
+    private BibDatabaseContext bibDatabaseContext;
+
     public BibDatabaseContext getDatabaseContext() {
-        return new BibDatabaseContext(database, metaData, file);
+        return Objects.requireNonNullElseGet(bibDatabaseContext, () -> new BibDatabaseContext(database, metaData, file));
     }
 
-    public void setDatabaseContext(BibDatabaseContext bibDatabaseContext) {
-        Objects.requireNonNull(bibDatabaseContext);
-        database = bibDatabaseContext.getDatabase();
-        metaData = bibDatabaseContext.getMetaData();
-        file = bibDatabaseContext.getDatabasePath().orElse(null);
+    public void setDatabaseContext(BibDatabaseContext context) {
+        Objects.requireNonNull(context);
+        database = context.getDatabase();
+        metaData = context.getMetaData();
+        file = context.getDatabasePath().orElse(null);
+        bibDatabaseContext = context;
     }
 
     public boolean isEmpty() {
